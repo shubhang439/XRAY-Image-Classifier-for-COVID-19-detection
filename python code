@@ -1,0 +1,67 @@
+import os
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+import pickle
+import random
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+
+
+dire = 'D:\\ML Project\\ChestXray\\train'
+
+categories = ['NORMAL', 'PNEUMONIA']
+
+data = []
+
+for category in categories:
+    path = os.path.join(dire, category)
+    #print(path," ")
+    label = categories.index(category)
+    #print(label," ")
+
+    for img in os.listdir(path):
+        imgpath = os.path.join(path, img)
+        print(imgpath)
+        lung_img = cv2.imread(imgpath, 0)
+
+        #try:
+        lung_img = cv2.resize(lung_img, (50, 50))
+        image = np.array(lung_img).flatten()
+        data.append([image,label])
+        #except Exception as e:
+        #    pass
+print(len(data))
+
+
+#pick_in = open('data1.pickle','wb')
+#pickle.dump(data, pick_in)
+#pick_in.close()
+
+#pick_in = open('data1.pickle','rb')
+#data = pickle.load(pick_in)
+#pick_in.close()
+#print(len(data))
+
+random.shuffle(data)
+features = []
+labels = []
+
+for feature, label in data:
+    features.append(feature)
+    labels.append(label)
+    print(feature)
+    print(label)
+
+
+X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.25, random_state=1)
+model = SVC(C=1, kernel='poly', gamma='auto')
+model.fit(X_train, y_train)
+
+prediction = model.predict(X_test)
+accuracy = model.score(X_test, y_test)
+
+categories = ['NORMAL', 'PNEUMONIA']
+print('Accuracy: ', accuracy)
+print('Prediction is :', categories[prediction[0]])
+
