@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 
 
-dire = 'D:\\ML Project\\ChestXray\\train'
+dire = 'D:\\ML Project\\ChestXray\\train'  #change path accordingly
 
 categories = ['NORMAL', 'PNEUMONIA']
 
